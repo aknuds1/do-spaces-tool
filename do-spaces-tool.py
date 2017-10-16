@@ -13,6 +13,8 @@ SECRET_ACCESS_KEY = os.environ['SECRET_ACCESS_KEY']
 def cmd_upload(args):
     file_path = os.path.abspath(args.file)
     bucket, key = args.location.split('/', 1)
+    assert bucket
+    assert key
 
     session = boto3.session.Session()
     client = session.client(
@@ -23,8 +25,7 @@ def cmd_upload(args):
     )
     resp = client.list_buckets()
     if bucket not in [x['Name'] for x in resp['Buckets']]:
-        print('Creating bucket {}'.format(bucket))
-        print(resp['Buckets'])
+        print('Creating bucket \'{}\''.format(bucket))
         client.create_bucket(Bucket=bucket)
 
     print('Uploading file {}...'.format(file_path))
@@ -43,22 +44,21 @@ def cmd_download(args):
         aws_access_key_id=ACCESS_KEY_ID,
         aws_secret_access_key=SECRET_ACCESS_KEY,
     )
-    file_path = os.path.join(args.output_dir, key)
-    print('Downloading file {}...'.format(file_path))
-    client.download_file(bucket, key, file_path)
+    print('Downloading file {}...'.format(args.destination))
+    client.download_file(bucket, key, args.destination)
 
 
 cl_parser = argparse.ArgumentParser()
 sub_cl_parsers = cl_parser.add_subparsers()
 
 upload_cl_parser = sub_cl_parsers.add_parser('upload')
-upload_cl_parser.add_argument('location')
 upload_cl_parser.add_argument('file')
+upload_cl_parser.add_argument('location')
 upload_cl_parser.set_defaults(func=cmd_upload)
 
 download_cl_parser = sub_cl_parsers.add_parser('download')
 download_cl_parser.add_argument('location')
-download_cl_parser.add_argument('output_dir')
+download_cl_parser.add_argument('destination')
 download_cl_parser.set_defaults(func=cmd_download)
 
 args = cl_parser.parse_args()
