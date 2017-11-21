@@ -5,7 +5,7 @@ import boto3.session
 from botocore.client import Config
 
 
-REGION = os.environ.get('region', 'nyc3')
+REGION = os.environ.get('region', 'ams3')
 ACCESS_KEY_ID = os.environ['ACCESS_KEY_ID']
 SECRET_ACCESS_KEY = os.environ['SECRET_ACCESS_KEY']
 
