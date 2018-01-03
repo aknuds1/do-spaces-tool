@@ -2,7 +2,8 @@ from python:alpine3.6
 
 WORKDIR /app
 
-RUN pip3 install -U boto3
+COPY requirements.txt .
+RUN pip3 install -U -r requirements.txt
 
 COPY do-spaces-tool.py .
 
