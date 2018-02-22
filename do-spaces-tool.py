@@ -29,9 +29,7 @@ def cmd_upload(args):
         client.create_bucket(Bucket=bucket)
 
     print('Uploading file {}...'.format(file_path))
-    client.upload_file(file_path, bucket, key, ExtraArgs={
-        'ServerSideEncryption': 'AES256',
-    })
+    client.upload_file(file_path, bucket, key)
 
 
 def cmd_download(args):
